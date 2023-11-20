@@ -51,20 +51,23 @@ def evaluatePerformance():
     # train the decision tree
     clf = tree.DecisionTreeClassifier()
     clf = clf.fit(Xtrain,ytrain)
-
+    
+    stump = tree.DecisionTreeClassifier(max_depth=1).fit(Xtrain,ytrain) 
+    clf3 = tree.DecisionTreeClassifier(max_depth=3).fit(Xtrain,ytrain) 
+    
     # output predictions on the remaining data
     y_pred = clf.predict(Xtest)
 
     # compute the training accuracy of the model
     meanDecisionTreeAccuracy = accuracy_score(ytest, y_pred)
-    
+
     
     # TODO: update these statistics based on the results of your experiment
-    stddevDecisionTreeAccuracy = 0
-    meanDecisionStumpAccuracy = 0
-    stddevDecisionStumpAccuracy = 0
-    meanDT3Accuracy = 0
-    stddevDT3Accuracy = 0
+    stddevDecisionTreeAccuracy = np.std(meanDecisionTreeAccuracy)
+    meanDecisionStumpAccuracy = accuracy_score(ytest, stump.predict(Xtest))
+    stddevDecisionStumpAccuracy = np.std(meanDecisionStumpAccuracy)
+    meanDT3Accuracy = accuracy_score(ytest, clf3.predict(Xtest))
+    stddevDT3Accuracy = np.std(meanDT3Accuracy)
 
     # make certain that the return value matches the API specification
     stats = np.zeros((3,2))
@@ -82,7 +85,7 @@ def evaluatePerformance():
 if __name__ == "__main__":
     
     stats = evaluatePerformance()
-    print "Decision Tree Accuracy = ", stats[0,0], " (", stats[0,1], ")"
-    print "Decision Stump Accuracy = ", stats[1,0], " (", stats[1,1], ")"
-    print "3-level Decision Tree = ", stats[2,0], " (", stats[2,1], ")"
+    print ("Decision Tree Accuracy = ", stats[0,0], " (", stats[0,1], ")")
+    print ("Decision Stump Accuracy = ", stats[1,0], " (", stats[1,1], ")")
+    print ("3-level Decision Tree = ", stats[2,0], " (", stats[2,1], ")")
 # ...to HERE.
